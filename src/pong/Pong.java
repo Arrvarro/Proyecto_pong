@@ -7,8 +7,10 @@ package pong;
 
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
@@ -86,25 +88,50 @@ public class Pong extends Application {
                 // limite movimiento paleta 1 en el eje Y
                 double posYpaleta1 = paleta1.getTranslateY();
                 paleta1.setTranslateY(posYpaleta1 + velocidadPaleta1Y);
-                if(posYpaleta1<=0){
-                    velocidadPaleta1Y = +5;
+                if(posYpaleta1<0){
+                    velocidadPaleta1Y = 0;
+                    paleta1.setTranslateY(0);
                 }
-                if(posYpaleta1>=340){
-                    velocidadPaleta1Y = -5;
+                if(posYpaleta1>340){
+                    velocidadPaleta1Y = 0;
+                    paleta1.setTranslateY(340);
                 }
                 // limite movimiento paleta 2 en el eje Y
                 double posYpaleta2 = paleta2.getTranslateY();
                 paleta2.setTranslateY(posYpaleta2 + velocidadPaleta2Y);
-                if(posYpaleta2<=0){
-                    velocidadPaleta2Y = +5;
+                if(posYpaleta2<0){
+                    velocidadPaleta2Y = 0;
+                    paleta2.setTranslateY(0);                            
                 }
-                if(posYpaleta2>=340){
-                    velocidadPaleta2Y = -5;
+                if(posYpaleta2>340){
+                    velocidadPaleta2Y = 0;
+                    paleta2.setTranslateY(340);
                 }
             }
             
             }.start();
-        }
+                scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
+                @Override
+                public void handle(KeyEvent event) {
+                switch (event.getCode()) {
+                    case UP:
+                        velocidadPaleta2Y = -5;               
+                        break;
+                    case DOWN:
+                        velocidadPaleta2Y = +5;
+                        break;
+                    case A:
+                        velocidadPaleta1Y = -5;
+                        break;
+                    case Z:
+                        velocidadPaleta1Y = +5;
+                        break;
+                        
+                }
+            }
+        }); 
+    }
+    
     
     /**
      * @param args the command line arguments
