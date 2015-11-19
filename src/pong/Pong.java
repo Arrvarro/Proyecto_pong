@@ -26,8 +26,8 @@ public class Pong extends Application {
      double Alto_Mundo = 400;
      
      // velocidad pelota en X y en Y
-     double velocidadPelotaX = 5;
-     double velocidadPelotaY = 5;
+     double velocidadPelotaX = 2;
+     double velocidadPelotaY = 2;
      
      // velocidad paleta en Y
      double velocidadPaleta1Y = 5;
@@ -70,19 +70,19 @@ public class Pong extends Application {
                 double posXpelota = pelota.getTranslateX();
                 pelota.setTranslateX(posXpelota + velocidadPelotaX);     
                 if(posXpelota>= 245){
-                    velocidadPelotaX = -5;
+                    velocidadPelotaX = -2;
                 }
                 if(posXpelota<= -245){
-                    velocidadPelotaX = +5;
+                    velocidadPelotaX = +2;
                 }
                 // limites movimiento de la pelota en el eje Y
                 double posYpelota = pelota.getTranslateY();
                 pelota.setTranslateY(posYpelota + velocidadPelotaY);
                 if(posYpelota>=385){
-                    velocidadPelotaY = -5;
+                    velocidadPelotaY = -2;
                 }
                 if(posYpelota<=0){
-                    velocidadPelotaY = 5;
+                    velocidadPelotaY = 2;
                 }
                 
                 // limite movimiento paleta 1 en el eje Y
@@ -106,26 +106,62 @@ public class Pong extends Application {
                 if(posYpaleta2>340){
                     velocidadPaleta2Y = 0;
                     paleta2.setTranslateY(340);
+                }              
+                // hacemos que la pelota revote con las palas
+                double posXpaleta1 = paleta1.getTranslateX();
+                if(posXpelota + 5 == posXpaleta1 + 15){
+                    System.out.println(paleta1.getTranslateY());
+                    System.out.println(pelota.getTranslateY());
+                    if(posYpelota + 5 >= posYpaleta1 && posYpelota + 5 <= posYpaleta1 + 60){
+                        velocidadPelotaX = 2;
+                        velocidadPelotaY = 2;
+                    }
+                
+                        
+                    
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                   
                 }
+                    
             }
-            
-            }.start();
-                scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
-                @Override
-                public void handle(KeyEvent event) {
-                switch (event.getCode()) {
-                    case UP:
-                        velocidadPaleta2Y = -5;               
-                        break;
-                    case DOWN:
-                        velocidadPaleta2Y = +5;
-                        break;
-                    case A:
-                        velocidadPaleta1Y = -5;
-                        break;
-                    case Z:
-                        velocidadPaleta1Y = +5;
-                        break;
+        }.start();
+            scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent event) {
+            switch (event.getCode()) {
+                case UP:
+                    velocidadPaleta2Y = -5;               
+                    break;
+                case DOWN:
+                    velocidadPaleta2Y = +5;
+                    break;
+                case A:
+                    velocidadPaleta1Y = -5;
+                    break;
+                case Z:
+                    velocidadPaleta1Y = +5;
+                    break;
                         
                 }
             }
