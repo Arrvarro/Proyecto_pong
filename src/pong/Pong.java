@@ -14,6 +14,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 /**
@@ -33,6 +34,17 @@ public class Pong extends Application {
      double velocidadPaleta1Y = 5;
      double velocidadPaleta2Y = 5;
      
+     // posicion pelota
+     double posXpelota = 0;
+     double posYpelota = 0;
+     
+     // marcador j1
+     int  punto1 = 0;
+     String puntoj1 = String.valueOf(punto1);
+     
+     // marcador j2
+     int punto2 = 0;
+     String puntoj2 = String.valueOf(punto2);
     
     @Override
     public void start(Stage primaryStage) {
@@ -44,18 +56,19 @@ public class Pong extends Application {
         primaryStage.show();   
         
         // creamos la pelota
-        Circle pelota = new Circle(250, 10, 5);
+        Circle pelota = new Circle(5);
+        pelota.setTranslateX(250);        
         pelota.setFill(Color.WHITE);
         root.getChildren().add(pelota);
         
         // creamos las paletas
         Rectangle paleta1 = new Rectangle(15, 60, Color.WHITE);
-        paleta1.setTranslateX(0);
+        paleta1.setTranslateX(10);
         paleta1.setTranslateY(170);
         root.getChildren().add(paleta1);
         
         Rectangle paleta2 = new Rectangle(15, 60, Color.WHITE);
-        paleta2.setTranslateX(485);
+        paleta2.setTranslateX(475);
         paleta2.setTranslateY(170);
         root.getChildren().add(paleta2);
         
@@ -63,17 +76,51 @@ public class Pong extends Application {
         Rectangle red = new Rectangle(5, 400, Color.WHITE);
         root.getChildren().add(red);
         red.setTranslateX(250);
+        
+        // creamos el marcador
+        Text marcadorJugador1 = new Text();
+        marcadorJugador1.setX(230);
+        marcadorJugador1.setY(15);
+        marcadorJugador1.setFill(Color.WHITE);        
+        marcadorJugador1.setText(puntoj1);
+        root.getChildren().add(marcadorJugador1);
+              
+        Text marcadorJugador2 = new Text(); 
+        marcadorJugador2.setX(280);
+        marcadorJugador2.setY(15);
+        marcadorJugador2.setFill(Color.WHITE);
+        marcadorJugador2.setText(puntoj2);
+        root.getChildren().add(marcadorJugador2);
+        
+        // cojemos posicionX paleta
+        double posXpaleta2 = paleta2.getTranslateX();
+        double posXpaleta1 = paleta1.getTranslateX();
         new AnimationTimer() {
             @Override
             public void handle(long now) {
+                
                 // limites de movimiento de la pelota en el eje X
                 double posXpelota = pelota.getTranslateX();
                 pelota.setTranslateX(posXpelota + velocidadPelotaX);     
-                if(posXpelota>= 245){
-                    velocidadPelotaX = -2;
+                if(posXpelota<= 7){
+                    root.getChildren().remove(pelota);
+                    root.getChildren().add(pelota);
+                    pelota.setTranslateX(250); 
+                    pelota.setTranslateY(200);
+                    // condiciones marcador
+                    punto2++;
+                    String puntoj2 = String.valueOf(punto2);
+                    marcadorJugador2.setText(puntoj2);                    
                 }
-                if(posXpelota<= -245){
-                    velocidadPelotaX = +2;
+                if(posXpelota>= 493){
+                    root.getChildren().remove(pelota);
+                    root.getChildren().add(pelota);
+                    pelota.setTranslateX(250); 
+                    pelota.setTranslateY(200);
+                    // condiciones marcador                    
+                    punto1++;
+                    String puntoj1 = String.valueOf(punto1);
+                    marcadorJugador1.setText(puntoj1);
                 }
                 // limites movimiento de la pelota en el eje Y
                 double posYpelota = pelota.getTranslateY();
@@ -96,6 +143,7 @@ public class Pong extends Application {
                     velocidadPaleta1Y = 0;
                     paleta1.setTranslateY(340);
                 }
+                
                 // limite movimiento paleta 2 en el eje Y
                 double posYpaleta2 = paleta2.getTranslateY();
                 paleta2.setTranslateY(posYpaleta2 + velocidadPaleta2Y);
@@ -106,44 +154,46 @@ public class Pong extends Application {
                 if(posYpaleta2>340){
                     velocidadPaleta2Y = 0;
                     paleta2.setTranslateY(340);
-                }              
+                }       
+                
                 // hacemos que la pelota revote con las palas
-                double posXpaleta1 = paleta1.getTranslateX();
-                if(posXpelota + 5 == posXpaleta1 + 15){
-                    System.out.println(paleta1.getTranslateY());
-                    System.out.println(pelota.getTranslateY());
-                    if(posYpelota + 5 >= posYpaleta1 && posYpelota + 5 <= posYpaleta1 + 60){
+                if (posXpelota <= posXpaleta1 + 22){
+                    if (posYpelota >= posYpaleta1 && posYpelota <= posYpaleta1+15){ 
+                        velocidadPelotaY = -2;
+                        velocidadPelotaX = +2;
+                    }
+                    if (posYpelota >= posYpaleta1+16 && posYpelota <= posYpaleta1+30){
+                        velocidadPelotaY = -2;
                         velocidadPelotaX = 2;
+                    }
+                    if (posYpelota >= posYpaleta1+31 && posYpelota <= posYpaleta1+45){
+                        velocidadPelotaY = 2;
+                        velocidadPelotaX = 2;
+                    }
+                    if (posYpelota >= posYpaleta1+46 && posYpelota <= posYpaleta1+60){
+                        velocidadPelotaY = 2;
+                        velocidadPelotaX = 2;
+                    }
+                }
+                if(posXpelota >= posXpaleta2 -7){
+                                       
+                    if (posYpelota >= posYpaleta2 && posYpelota <= posYpaleta2+15){
+                        velocidadPelotaX = -2;
+                        velocidadPelotaY = -2;
+                    }
+                    if (posYpelota >= posYpaleta2+16 && posYpelota <= posYpaleta2+30){
+                        velocidadPelotaX = -2;
+                        velocidadPelotaY = -2;
+                    }
+                    if (posYpelota >= posYpaleta2+31 && posYpelota <= posYpaleta2+45){
+                        velocidadPelotaX = -2;
                         velocidadPelotaY = 2;
                     }
-                
-                        
-                    
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                   
-                }
-                    
+                    if (posYpelota >= posYpaleta2+46 && posYpelota <= posYpaleta2+60){
+                        velocidadPelotaX = -2;
+                        velocidadPelotaY = 2 ;
+                    }
+                }                    
             }
         }.start();
             scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
@@ -162,7 +212,12 @@ public class Pong extends Application {
                 case Z:
                     velocidadPaleta1Y = +5;
                     break;
-                        
+                case SPACE:
+                    root.getChildren().remove(pelota);
+                    root.getChildren().add(pelota);
+                    pelota.setTranslateX(250); 
+                    pelota.setTranslateY(200);
+                    break;                   
                 }
             }
         }); 
